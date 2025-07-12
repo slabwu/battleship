@@ -1,4 +1,5 @@
 import { Ship } from './ship'
+import { Gameboard } from './game'
 
 describe('Ship class', () => {
     let boat = new Ship(1)
@@ -11,4 +12,11 @@ describe('Ship class', () => {
         expect(boat.hits).toBe(1)
     })
     it('sinks', () => expect(boat.isSunk()).toBe(true))
+})
+
+describe('Gameboard class', () => {
+    let test = new Gameboard(1)
+
+    it('exists', () => expect(typeof test).toBe('object'))
+    it('returns board', () => expect(Array.isArray(test.board)).toBe(true))
 })
