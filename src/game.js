@@ -12,15 +12,6 @@ export class Gameboard {
         for (let j = 0; j < COLUMNS; j++) {
             this.#board[i].push(new Cell());
         }}
-
-        this.ships.forEach((length, index) => {
-            let ship = new Ship(length)
-            this.ships[index] = ship
-        })
-
-        this.placeShip(0, this.ships[0].length)
-        // this.printBoard()
-        // console.log(this.ships)
     }
 
     get board() {
@@ -35,35 +26,80 @@ export class Gameboard {
         })
     }
 
-    placeShip = (index, length) => {
-        let x = 1
-        let y = 1
-        let orientation = 'x'
-
-        for (let i = 0; i < length; i++) {
-            this.populate([x, y + i], index + 1, orientation)
-            this.populate([x - 1, y + i], 0, orientation)
-            this.populate([x + 1, y + i], 0, orientation)
-            for (let j = -1; j < 2; j++) {
-                this.populate([x + j, y - 1], 0, orientation)
-                this.populate([x + j, y + length], 0, orientation)
+    placeShip = ([x, y], index, length, orientation) => {
+        if (orientation === 'x') {
+            for (let i = 0; i < length; i++) {
+                this.populate([x + i, y], index)
+                this.populate([x + i, y - 1], '=')
+                this.populate([x + i, y + 1], '=')
+                for (let j = -1; j < 2; j++) {
+                    this.populate([x - 1, y + j], '=')
+                    this.populate([x + length, y + j], '=')
+                }
+            }
+        } else {
+            for (let i = 0; i < length; i++) {
+                this.populate([x, y + i], index)
+                this.populate([x - 1, y + i], '=')
+                this.populate([x + 1, y + i], '=')
+                for (let j = -1; j < 2; j++) {
+                    this.populate([x + j, y - 1], '=')
+                    this.populate([x + j, y + length], '=')
+                }
             }
         }
-
-        this.printBoard()
     }
 
-    isOnBoard = (y, x) => {
-        return x >= 0 && x < 10 && y >= 0 && y < 10
-    }
+    isOnBoard = (x, y) => x >= 0 && x < 10 && y >= 0 && y < 10
 
-    populate = ([x, y], value, orientation) => {
-        if (orientation = 'x') {
-            if (this.isOnBoard(x, y)) this.#board[x][y].value = value
-        } else {
-            if (this.isOnBoard(y, x)) this.#board[y][x].value = value
-        }
+    canOverwrite = (x, y) => this.getValue(x, y) === '_' || this.getValue(x, y) === '='
+
+    populate = ([x, y], value) => {
+        if (this.isOnBoard(x, y) && this.canOverwrite(x, y)) this.#board[y][x].value = value
     } 
+
+    getValue = (x, y) => this.#board[y][x].value
+
+    isValidPosition([x, y], length, orientation) {
+        for (let i = 0; i < length; i++) {
+            if (orientation === 'x') {
+                // console.log(x + i, y, this.getValue(y, x + i))
+                if (this.getValue(x + i, y) !== '_') return false
+            } else {
+                // console.log(x, y + i, this.getValue(y + i, x))
+                if (this.getValue(x, y + i) !== '_') return false
+            }
+        }
+        return true
+    }
+
+    generateShips = () => {
+        this.ships.forEach((length, index) => {
+            let ship = new Ship(length)
+            this.ships[index] = ship
+
+            let x, y, orientation
+            while (true) {
+                x = this.getRandomInt(11 - length)
+                y = this.getRandomInt(11 - length)
+                orientation = (this.getRandomInt(2) === 0) ? 'x' : 'y' 
+                console.log({index, x, y, length, orientation} )
+                if (this.isValidPosition([x, y], length, orientation)) {
+                    this.placeShip([x, y], index, length, orientation)
+                    break
+                }
+            }
+            this.printBoard()
+            console.log()
+        })
+
+        // this.placeShip([1, 1], 0, this.ships[0].length, 'x')
+        // this.printBoard()
+        // console.log(this.ships)
+    }
+
+    getRandomInt = (max) => Math.floor(Math.random() * max)
+
 }
 
 class Cell {
@@ -73,3 +109,14 @@ class Cell {
 }
 
 let cat = new Gameboard()
+cat.generateShips()
+// cat.placeShip([1, 1], 0, 4, 'y')
+// cat.placeShip([5, 1], 1, 4, 'y')
+// cat.placeShip([3, 2], 2, 1, 'y')
+// cat.placeShip([3, 6], 3, 1, 'y')
+// cat.placeShip([0, 9], 4, 1, 'y')
+// cat.placeShip([3, 8], 5, 4, 'x')
+// cat.printBoard()
+// console.log(cat.isValidPosition([3, 4], 1, 'x'))
+// console.log(cat.isValidPosition([0, 6], 4, 'x'))
+// console.log(cat.isValidPosition([0, 6], 4, 'y'))
