@@ -38,15 +38,18 @@ export class Gameboard {
     placeShip = (index, length) => {
         let x = 1
         let y = 1
+        let orientation = 'x'
+
         for (let i = 0; i < length; i++) {
-            this.populate([x, y + i], index + 1)
-            this.populate([x - 1, y + i], 0)
-            this.populate([x + 1, y + i], 0)
+            this.populate([x, y + i], index + 1, orientation)
+            this.populate([x - 1, y + i], 0, orientation)
+            this.populate([x + 1, y + i], 0, orientation)
             for (let j = -1; j < 2; j++) {
-                this.populate([x + j, y - 1], 0)
-                this.populate([x + j, y + length], 0)
+                this.populate([x + j, y - 1], 0, orientation)
+                this.populate([x + j, y + length], 0, orientation)
             }
         }
+
         this.printBoard()
     }
 
@@ -54,8 +57,12 @@ export class Gameboard {
         return x >= 0 && x < 10 && y >= 0 && y < 10
     }
 
-    populate = ([x, y], value) => {
-        if (this.isOnBoard(y, x)) this.#board[y][x].value = value
+    populate = ([x, y], value, orientation) => {
+        if (orientation = 'x') {
+            if (this.isOnBoard(x, y)) this.#board[x][y].value = value
+        } else {
+            if (this.isOnBoard(y, x)) this.#board[y][x].value = value
+        }
     } 
 }
 
