@@ -39,10 +39,24 @@ export class Gameboard {
         let x = 1
         let y = 1
         for (let i = 0; i < length; i++) {
-            this.#board[i + y][x].value = index + 1
+            this.populate([x, y + i], index + 1)
+            this.populate([x - 1, y + i], 0)
+            this.populate([x + 1, y + i], 0)
+            for (let j = -1; j < 2; j++) {
+                this.populate([x + j, y - 1], 0)
+                this.populate([x + j, y + length], 0)
+            }
         }
         this.printBoard()
     }
+
+    isOnBoard = (y, x) => {
+        return x >= 0 && x < 10 && y >= 0 && y < 10
+    }
+
+    populate = ([x, y], value) => {
+        if (this.isOnBoard(y, x)) this.#board[y][x].value = value
+    } 
 }
 
 class Cell {
