@@ -1,5 +1,5 @@
-import { Ship } from './ship'
-import { Gameboard } from './game'
+import { Ship } from './ship.js'
+import { Gameboard } from './game.js'
 
 describe('Ship class', () => {
     let boat = new Ship(1)
