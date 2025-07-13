@@ -2,7 +2,7 @@ import { Ship } from './ship.js'
 
 export class Gameboard {
     #board = []
-    #attacked = new Set()
+    #attacked = new Map()
     constructor() {
         const ROWS = 10
         const COLUMNS = 10
@@ -97,10 +97,9 @@ export class Gameboard {
     receiveAttack = (x, y) => {
         let hash = x + 9 * y
         if (this.#attacked.has(hash)) return
-        this.#attacked.add(hash)
+        this.#attacked.set(hash, this.getValue(x, y))
         if (this.isShip(x, y)) {
             this.hitShip(x, y)
-            return this.getValue(x, y)
         }
         console.log(this.attackedCells)
     }

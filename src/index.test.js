@@ -32,7 +32,7 @@ describe('Gameboard class', () => {
         expect(test.isValidPosition([5, 2], 3, 'x')).toBe(false)
     })
     it('hits ships', () => {
-        expect(test.receiveAttack(1, 1)).toBe(1)
+        test.receiveAttack(1, 1)
         expect(test.ships[1].hits).toBe(1)
     })
     it('hits each cell only once', () => {
