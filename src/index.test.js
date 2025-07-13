@@ -39,4 +39,14 @@ describe('Gameboard class', () => {
         test.receiveAttack(1, 1)
         expect(test.attackedCells.size).toBe(1)
     })
+    it('sinks ships', () => {
+        test.receiveAttack(9, 9)
+        expect(test.sunkShips.length).toBe(1)
+    })
+    it('reports if all ships sunk', () => {
+        test.receiveAttack(2, 1)
+        test.receiveAttack(3, 1)
+        test.receiveAttack(4, 1)
+        expect(test.allShipsSunk()).toBe(true)
+    })
 })

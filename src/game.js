@@ -3,6 +3,8 @@ import { Ship } from './ship.js'
 export class Gameboard {
     #board = []
     #attacked = new Map()
+    #sunkShips = []
+
     constructor() {
         const ROWS = 10
         const COLUMNS = 10
@@ -17,6 +19,14 @@ export class Gameboard {
 
     get board() {
         return this.#board
+    }
+
+    get attackedCells() {
+        return this.#attacked
+    }
+
+    get sunkShips() {
+        return this.#sunkShips
     }
 
     printBoard = () => {
@@ -99,18 +109,17 @@ export class Gameboard {
         if (this.#attacked.has(hash)) return
         this.#attacked.set(hash, this.getValue(x, y))
         if (this.isShip(x, y)) {
-            this.hitShip(x, y)
+            let attackedShip = this.getShip(x, y)
+            attackedShip.hit()
+            if (attackedShip.isSunk()) {
+                this.#sunkShips.push(attackedShip)
+            }
         }
-        console.log(this.attackedCells)
     }
 
-    hitShip = (x, y) => {
-        this.ships[this.getValue(x, y)].hit()
-    }
-
-    get attackedCells() {
-        return this.#attacked
-    }
+    getShip = (x, y) => this.ships[this.getValue(x, y)]
+    
+    allShipsSunk = () => this.#sunkShips.length === this.ships.length
 }
 
 class Cell {
@@ -121,8 +130,8 @@ class Cell {
 
 let cat = new Gameboard()
 cat.generateShips()
-cat.receiveAttack(1, 1)
-cat.receiveAttack(1, 2)
-cat.receiveAttack(1, 3)
-cat.receiveAttack(1, 4)
-cat.receiveAttack(1, 5)
+cat.receiveAttack(0, 1)
+cat.receiveAttack(0, 2)
+cat.receiveAttack(0, 3)
+cat.receiveAttack(0, 4)
+cat.receiveAttack(0, 5)
