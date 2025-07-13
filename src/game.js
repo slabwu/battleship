@@ -2,6 +2,7 @@ import { Ship } from './ship.js'
 
 export class Gameboard {
     #board = []
+    #attacked = new Set()
     constructor() {
         const ROWS = 10
         const COLUMNS = 10
@@ -52,10 +53,10 @@ export class Gameboard {
 
     isOnBoard = (x, y) => x >= 0 && x < 10 && y >= 0 && y < 10
 
-    canOverwrite = (x, y) => this.getValue(x, y) === '_' || this.getValue(x, y) === '='
+    isShip = (x, y) => Number.isInteger(this.getValue(x, y))
 
     populate = ([x, y], value) => {
-        if (this.isOnBoard(x, y) && this.canOverwrite(x, y)) this.#board[y][x].value = value
+        if (this.isOnBoard(x, y) && !this.isShip(x, y)) this.#board[y][x].value = value
     } 
 
     getValue = (x, y) => this.#board[y][x].value
@@ -63,10 +64,8 @@ export class Gameboard {
     isValidPosition([x, y], length, orientation) {
         for (let i = 0; i < length; i++) {
             if (orientation === 'x') {
-                // console.log(x + i, y, this.getValue(y, x + i))
                 if (this.getValue(x + i, y) !== '_') return false
             } else {
-                // console.log(x, y + i, this.getValue(y + i, x))
                 if (this.getValue(x, y + i) !== '_') return false
             }
         }
@@ -83,7 +82,6 @@ export class Gameboard {
                 x = this.getRandomInt(11 - length)
                 y = this.getRandomInt(11 - length)
                 orientation = (this.getRandomInt(2) === 0) ? 'x' : 'y' 
-                console.log({index, x, y, length, orientation} )
                 if (this.isValidPosition([x, y], length, orientation)) {
                     this.placeShip([x, y], index, length, orientation)
                     break
@@ -92,14 +90,28 @@ export class Gameboard {
             this.printBoard()
             console.log()
         })
-
-        // this.placeShip([1, 1], 0, this.ships[0].length, 'x')
-        // this.printBoard()
-        // console.log(this.ships)
     }
 
     getRandomInt = (max) => Math.floor(Math.random() * max)
 
+    receiveAttack = (x, y) => {
+        let hash = x + 9 * y
+        if (this.#attacked.has(hash)) return
+        this.#attacked.add(hash)
+        if (this.isShip(x, y)) {
+            this.hitShip(x, y)
+            return this.getValue(x, y)
+        }
+        console.log(this.attackedCells)
+    }
+
+    hitShip = (x, y) => {
+        this.ships[this.getValue(x, y)].hit()
+    }
+
+    get attackedCells() {
+        return this.#attacked
+    }
 }
 
 class Cell {
@@ -110,13 +122,8 @@ class Cell {
 
 let cat = new Gameboard()
 cat.generateShips()
-// cat.placeShip([1, 1], 0, 4, 'y')
-// cat.placeShip([5, 1], 1, 4, 'y')
-// cat.placeShip([3, 2], 2, 1, 'y')
-// cat.placeShip([3, 6], 3, 1, 'y')
-// cat.placeShip([0, 9], 4, 1, 'y')
-// cat.placeShip([3, 8], 5, 4, 'x')
-// cat.printBoard()
-// console.log(cat.isValidPosition([3, 4], 1, 'x'))
-// console.log(cat.isValidPosition([0, 6], 4, 'x'))
-// console.log(cat.isValidPosition([0, 6], 4, 'y'))
+cat.receiveAttack(1, 1)
+cat.receiveAttack(1, 2)
+cat.receiveAttack(1, 3)
+cat.receiveAttack(1, 4)
+cat.receiveAttack(1, 5)
