@@ -1,3 +1,4 @@
+import './styles.css'
 import { Player } from './player.js'
 import { render } from './render.js'
 
@@ -6,6 +7,7 @@ let user = new Player('Player 1')
 let robot = new Player('Player 2')
 user.board.printBoard()
 render(user.board.cells)
+render(user.enemyBoard)
 user.printEnemyBoard()
 
 robot.board.receiveAttack(1, 1)

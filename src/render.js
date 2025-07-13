@@ -5,7 +5,11 @@ export function render(board) {
     console.log(board)
     board.forEach(row => {
         let rowOutput = '<div>'
-        row.forEach(cell => rowOutput += `<div>${cell.value}</div>`)
+        row.forEach(cell => {
+            let content = ''
+            if (Number.isInteger(cell.value)) content = cell.value
+            rowOutput += `<div>${content}</div>`
+        })
         rowOutput += '</div>'
         output += rowOutput
     })
