@@ -17,7 +17,7 @@ export class Gameboard {
         }}
     }
 
-    get board() {
+    get cells() {
         return this.#board
     }
 
@@ -97,8 +97,8 @@ export class Gameboard {
                     break
                 }
             }
-            this.printBoard()
-            console.log()
+            // this.printBoard()
+            // console.log()
         })
     }
 
