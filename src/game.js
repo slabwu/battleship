@@ -122,7 +122,7 @@ export class Gameboard {
     allShipsSunk = () => this.#sunkShips.length === this.ships.length
 }
 
-class Cell {
+export class Cell {
     constructor() {
         this.value = '_'
     }
@@ -130,8 +130,3 @@ class Cell {
 
 let cat = new Gameboard()
 cat.generateShips()
-cat.receiveAttack(0, 1)
-cat.receiveAttack(0, 2)
-cat.receiveAttack(0, 3)
-cat.receiveAttack(0, 4)
-cat.receiveAttack(0, 5)

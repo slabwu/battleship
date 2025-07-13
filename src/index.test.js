@@ -53,9 +53,10 @@ describe('Gameboard class', () => {
 })
 
 describe('Player class', () => {
-    let test = new Player()
+    let test = new Player('John')
     console.log(test.board)
 
     it('exists', () => expect(typeof test).toBe('object'))
+    it('has a name', () => expect(test.name).toBe('John'))
     it('has gameboard', () => expect(Array.isArray(test.board.cells)).toBe(true))
 })
