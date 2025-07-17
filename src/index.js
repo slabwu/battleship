@@ -13,21 +13,19 @@ render(user.board.cells)
 renderAsHidden(robot.board.cells)
 render(robot.board.cells)
 
-
-
-// robot.board.receiveAttack(1, 2)
-// robot.board.receiveAttack(1, 3)
-// console.log(robot.board.attackedCells)
-
 export function attackEnemy(e) {
-    let { column, row, x = +column, y = +row} = e.srcElement.dataset
+    let { column, row, x = +column, y = +row } = e.srcElement.dataset
     let cell = x + y * 9
     let div = e.srcElement
     if (turn === 'player' && !robot.board.attackedCells.has(cell)) {
         console.log(e.srcElement)
         robot.board.receiveAttack(x, y)
-        div.innerText = (robot.board.isShip(x, y))? '✕' : '·'
-        div.classList.add('clicked')
+        if (robot.board.isShip(x, y)) {
+            div.classList.add('hit')
+        } else {
+            div.classList.add('miss')
+        }
+        console.log(robot.board.sunkShips)
         // turn = 'robot'
     }
 }

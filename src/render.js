@@ -2,29 +2,14 @@ import { attackEnemy } from './index.js'
 const $ = (id) => document.getElementById(id)
 
 export function render(board) {
-    let output = ''
-    board.forEach(row => {
-        let rowOutput = '<div>'
-        row.forEach(cell => {
-            let content = ''
-            let colour = 'grey'
-            if (Number.isInteger(cell.value)) {
-                content = cell.value
-                colour = 'blue'
-            }
-            rowOutput += `<div style="background-color:${colour};">${content}</div>`
-        })
-        rowOutput += '</div>'
-        output += rowOutput
-    })
-
-    const gameBoard = document.createElement('div')
-    gameBoard.classList.add('board')
-    gameBoard.innerHTML = output
-    $('game').appendChild(gameBoard)
+    renderCells(board, false)
 }
 
 export function renderAsHidden(board) {
+    renderCells(board, true)
+}
+
+function renderCells(board, hidden) {
     const gameBoard = document.createElement('div')
     gameBoard.classList.add('board')
     $('game').appendChild(gameBoard)
@@ -34,12 +19,18 @@ export function renderAsHidden(board) {
         gameBoard.appendChild(rowDiv)
         row.forEach((cell, columnIndex) => {
             let cellDiv = document.createElement('div')
-            cellDiv.classList.add('clickableCell')
             cellDiv.dataset.y = rowIndex
             cellDiv.dataset.x = columnIndex
             rowDiv.appendChild(cellDiv)
-
-            cellDiv.addEventListener('click', attackEnemy)
+            
+            if (hidden) {
+                cellDiv.classList.add('clickableCell')
+                cellDiv.addEventListener('click', attackEnemy)
+            } else {
+                let className = 'empty'
+                if (Number.isInteger(cell.value)) className = 'ship'
+                cellDiv.classList.add(className)
+            }
         })
     })
 }

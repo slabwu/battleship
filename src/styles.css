@@ -29,10 +29,35 @@ body {
   cursor: pointer;
 }
 
-.clickableCell.clicked {
-  background-color: gray;
+.clickableCell.hit, .clickableCell.miss {
   cursor: default;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.clickableCell.hit {
+  color: red;
+  background-color: palevioletred;
+}
+
+.clickableCell.hit::after {
+  content: '✕';
+}
+
+.clickableCell.miss {
+  color: blue;
+  background-color: gray;
+}
+
+.clickableCell.miss::after {
+  content: '•';
+}
+
+.empty {
+  background-color: darkgray;
+}
+
+.ship {
+  background-color: blue;
 }
