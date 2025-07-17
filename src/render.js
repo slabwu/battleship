@@ -14,6 +14,12 @@ function renderCells(board, hidden) {
     gameBoard.classList.add('board')
     $('game').appendChild(gameBoard)
 
+    if (hidden) {
+        gameBoard.classList.add('enemy')
+    } else {
+        gameBoard.classList.add('player')
+    }
+
     board.forEach((row, rowIndex) => {
         let rowDiv = document.createElement('div')
         gameBoard.appendChild(rowDiv)

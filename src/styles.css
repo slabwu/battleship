@@ -29,28 +29,28 @@ body {
   cursor: pointer;
 }
 
-.clickableCell.hit, .clickableCell.miss {
+div.hit, div.miss {
   cursor: default;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.clickableCell.hit {
+div.hit {
   color: red;
   background-color: palevioletred;
 }
 
-.clickableCell.hit::after {
+div.hit::after {
   content: '✕';
 }
 
-.clickableCell.miss {
-  color: blue;
+div.miss {
+  color: navy;
   background-color: gray;
 }
 
-.clickableCell.miss::after {
+div.miss::after {
   content: '•';
 }
 

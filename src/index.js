@@ -4,8 +4,8 @@ import { render, renderAsHidden } from './render.js'
 import { Events } from "./pubsub.js";
 
 console.log('Welcome to Battleship')
-let user = new Player('Player 1')
-let robot = new Player('Player 2')
+let user = new Player('player')
+let robot = new Player('enemy', true)
 let turn = 'player'
 
 user.board.printBoard()
@@ -16,16 +16,18 @@ render(robot.board.cells)
 export function attackEnemy(e) {
     let { column, row, x = +column, y = +row } = e.srcElement.dataset
     let cell = x + y * 9
-    let div = e.srcElement
+    // let div = e.srcElement
+
     if (turn === 'player' && !robot.board.attackedCells.has(cell)) {
-        console.log(e.srcElement)
-        robot.board.receiveAttack(x, y)
-        if (robot.board.isShip(x, y)) {
-            div.classList.add('hit')
-        } else {
-            div.classList.add('miss')
+        user.attack(robot, x, y)
+
+        let cell
+        while (true) {
+            cell = Math.floor(Math.random() * 100)
+            if (!user.board.attackedCells.has(cell)) break
         }
-        console.log(robot.board.sunkShips)
-        // turn = 'robot'
+        robot.attack(user, cell % 10, Math.floor(cell / 10))
+        console.log(user.board.attackedCells)
     }
+    
 }
