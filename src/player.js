@@ -19,16 +19,4 @@ export class Player {
             div.classList.add('miss')
         }
     }
-
-    attackPlayer = (player) => {
-        let cell
-        while (true) {
-            cell = this.getRandomInt(100)
-            if (!player.board.attackedCells.has(cell)) break
-        }
-        player.board.receiveAttack(cell % 10, Math.floor(cell / 10))
-        console.log(player.board.attackedCells)
-    }
-
-    getRandomInt = (max) => Math.floor(Math.random() * max)
 }
