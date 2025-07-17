@@ -23,3 +23,16 @@ body {
   width: 20px;
   text-align: center;
 }
+
+.clickableCell {
+  background-color: darkgray;
+  cursor: pointer;
+}
+
+.clickableCell.clicked {
+  background-color: gray;
+  cursor: default;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
