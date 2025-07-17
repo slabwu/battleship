@@ -22,12 +22,15 @@ export function attackEnemy(e) {
         user.attack(robot, x, y)
 
         let cell
+        turn = 'enemy'
         while (true) {
             cell = Math.floor(Math.random() * 100)
             if (!user.board.attackedCells.has(cell)) break
         }
-        robot.attack(user, cell % 10, Math.floor(cell / 10))
-        console.log(user.board.attackedCells)
+        setTimeout(() => {
+            robot.attack(user, cell % 10, Math.floor(cell / 10))
+            turn = 'player'
+        }, Math.random() * 500 + 500)
     }
     
 }
