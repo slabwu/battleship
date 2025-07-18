@@ -1,4 +1,5 @@
 import { Ship } from './ship.js'
+import { Events } from './pubsub.js'
 
 export class Gameboard {
     #board = []
@@ -145,16 +146,13 @@ export class Gameboard {
     }
 
     getShip = (x, y) => this.ships[this.getValue(x, y)]
-
-    getDOM = (x, y) => document.querySelector(`.${[this.name]} [data-x="${x}"][data-y="${y}"]`)
     
     clear = (x, y) => {
         let hash = x + y * 10
         if (this.isOnBoard(x, y) && !this.#attacked.has(hash)) {
-            this.getDOM(x, y).classList.add('cleared')
+            Events.emit('updateCell', [this.name, x, y, 'cleared'])
             this.#attacked.set(hash, this.getValue(x, y))
         }
-        if (this.isOnBoard(x, y)) console.log(hash, this.getDOM(x, y), this.#attacked, this.#attacked.has(hash))
     }
 
     allShipsSunk = () => this.#sunkShips.length === this.ships.length

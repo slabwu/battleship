@@ -1,4 +1,5 @@
 import { attackEnemy } from './index.js'
+import { Events } from './pubsub.js'
 const $ = (id) => document.getElementById(id)
 
 export function render(board) {
@@ -40,3 +41,10 @@ function renderCells(board, hidden) {
         })
     })
 }
+
+(function renderer() {
+    Events.on('updateCell', ([name, x, y, state]) => {
+        let div = document.querySelector(`.${name} [data-x="${x}"][data-y="${y}"]`)
+        div.classList.add(state)
+    })
+})()

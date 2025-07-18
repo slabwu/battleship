@@ -11,12 +11,11 @@ export class Player {
     attack = (player, x, y) => {
         player.board.receiveAttack(x, y)
 
-        let div = document.querySelector(`.${[player.name]} [data-x="${x}"][data-y="${y}"]`)
         if (player.board.isShip(x, y)) {
-            div.classList.add('hit')
+            Events.emit('updateCell', [player.name, x, y, 'hit'])
             return true
         } else {
-            div.classList.add('miss')
+            Events.emit('updateCell', [player.name, x, y, 'miss'])
             return false
         }
     }
