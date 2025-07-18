@@ -8,14 +8,15 @@ export class Player {
         this.board.generateShips()
     }
 
-    attack = (player, x, y) => {
-        player.board.receiveAttack(x, y)
+    attack = (enemy, x, y) => {
+        enemy.board.receiveAttack(x, y)
 
-        if (player.board.isShip(x, y)) {
-            Events.emit('updateCell', [player.name, x, y, 'hit'])
+        if (enemy.board.isShip(x, y)) {
+            Events.emit('updateCell', [enemy.name, x, y, 'hit'])
+            if (enemy.board.allShipsSunk()) Events.emit('win', this.name)
             return true
         } else {
-            Events.emit('updateCell', [player.name, x, y, 'miss'])
+            Events.emit('updateCell', [enemy.name, x, y, 'miss'])
             return false
         }
     }

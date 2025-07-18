@@ -43,6 +43,7 @@ function renderCells(board, hidden) {
 }
 
 (function renderer() {
+    Events.on('win', (player) => {console.log(`${player} won`)})
     Events.on('updateCell', ([name, x, y, state]) => {
         let div = document.querySelector(`.${name} [data-x="${x}"][data-y="${y}"]`)
         div.classList.add(state)
