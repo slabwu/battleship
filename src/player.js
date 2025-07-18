@@ -14,8 +14,10 @@ export class Player {
         let div = document.querySelector(`.${[player.name]} [data-x="${x}"][data-y="${y}"]`)
         if (player.board.isShip(x, y)) {
             div.classList.add('hit')
+            return true
         } else {
             div.classList.add('miss')
+            return false
         }
     }
 }
