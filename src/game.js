@@ -108,7 +108,7 @@ export class Gameboard {
     getRandomInt = (max) => Math.floor(Math.random() * max)
 
     receiveAttack = (x, y) => {
-        let hash = x + 9 * y
+        let hash = x + y * 10
         if (this.#attacked.has(hash)) return
         this.#attacked.set(parseInt(hash), this.getValue(x, y))
         if (this.isShip(x, y)) {
@@ -149,11 +149,12 @@ export class Gameboard {
     getDOM = (x, y) => document.querySelector(`.${[this.name]} [data-x="${x}"][data-y="${y}"]`)
     
     clear = (x, y) => {
-        let hash = x + 9 * y
+        let hash = x + y * 10
         if (this.isOnBoard(x, y) && !this.#attacked.has(hash)) {
             this.getDOM(x, y).classList.add('cleared')
             this.#attacked.set(hash, this.getValue(x, y))
         }
+        if (this.isOnBoard(x, y)) console.log(hash, this.getDOM(x, y), this.#attacked, this.#attacked.has(hash))
     }
 
     allShipsSunk = () => this.#sunkShips.length === this.ships.length

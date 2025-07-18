@@ -18,9 +18,9 @@ export function attackEnemy(e) {
     x = parseInt(x)
     y = parseInt(y)
     
-    let hash = x + y * 9
+    let hash = x + y * 10
     // let div = e.srcElement
-
+    console.log(hash, x, y)
     if (turn === 'player' && !robot.board.attackedCells.has(hash)) {
         user.attack(robot, x, y)
 
@@ -33,6 +33,7 @@ export function attackEnemy(e) {
         setTimeout(() => {
             robot.attack(user, cell % 10, Math.floor(cell / 10))
             turn = 'player'
-        }, Math.random() * 500 + 500)
+        }, 0)
+        // }, Math.random() * 500 + 500)
     }
 }
