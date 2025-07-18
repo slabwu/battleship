@@ -4,11 +4,13 @@ export class Gameboard {
     #board = []
     #attacked = new Map()
     #sunkShips = []
+    #shipLocations = []
 
-    constructor() {
+    constructor(name) {
         const ROWS = 10
         const COLUMNS = 10
         this.ships = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+        this.name = name
 
         for (let i = 0; i < ROWS; i++) {
         this.#board[i] = [];
@@ -94,6 +96,7 @@ export class Gameboard {
                 orientation = (this.getRandomInt(2) === 0) ? 'x' : 'y' 
                 if (this.isValidPosition([x, y], length, orientation)) {
                     this.placeShip([x, y], index, length, orientation)
+                    this.#shipLocations[index] = { x, y, length, orientation }
                     break
                 }
             }
@@ -107,18 +110,52 @@ export class Gameboard {
     receiveAttack = (x, y) => {
         let hash = x + 9 * y
         if (this.#attacked.has(hash)) return
-        this.#attacked.set(hash, this.getValue(x, y))
+        this.#attacked.set(parseInt(hash), this.getValue(x, y))
         if (this.isShip(x, y)) {
             let attackedShip = this.getShip(x, y)
             attackedShip.hit()
             if (attackedShip.isSunk()) {
                 this.#sunkShips.push(attackedShip)
+                this.clearNeighbourCells(this.getValue(x, y))
+            }
+        }
+    }
+
+    clearNeighbourCells = (index) => {
+        let { x, y, length, orientation } = this.#shipLocations[index]
+        if (orientation === 'x') {
+            for (let i = 0; i < length; i++) {
+                this.clear(x + i, y - 1)
+                this.clear(x + i, y + 1)
+                for (let j = -1; j < 2; j++) {
+                    this.clear(x - 1, y + j)
+                    this.clear(x + length, y + j)
+                }
+            }
+        } else {
+            for (let i = 0; i < length; i++) {
+                this.clear(x - 1, y + i)
+                this.clear(x + 1, y + i)
+                for (let j = -1; j < 2; j++) {
+                    this.clear(x + j, y - 1)
+                    this.clear(x + j, y + length)
+                }
             }
         }
     }
 
     getShip = (x, y) => this.ships[this.getValue(x, y)]
+
+    getDOM = (x, y) => document.querySelector(`.${[this.name]} [data-x="${x}"][data-y="${y}"]`)
     
+    clear = (x, y) => {
+        let hash = x + 9 * y
+        if (this.isOnBoard(x, y) && !this.#attacked.has(hash)) {
+            this.getDOM(x, y).classList.add('cleared')
+            this.#attacked.set(hash, this.getValue(x, y))
+        }
+    }
+
     allShipsSunk = () => this.#sunkShips.length === this.ships.length
 }
 

@@ -29,7 +29,7 @@ body {
   cursor: pointer;
 }
 
-div.hit, div.miss {
+div.hit, div.miss, div.cleared {
   cursor: default;
   -webkit-user-select: none;
   -ms-user-select: none;
@@ -50,8 +50,13 @@ div.miss {
   background-color: gray;
 }
 
-div.miss::after {
+div.miss::after, div.cleared::after {
   content: '•';
+}
+
+div.cleared {
+  color: greenyellow;
+  background-color: gray;
 }
 
 .empty {

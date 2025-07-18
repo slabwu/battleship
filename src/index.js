@@ -14,11 +14,14 @@ renderAsHidden(robot.board.cells)
 render(robot.board.cells)
 
 export function attackEnemy(e) {
-    let { column, row, x = +column, y = +row } = e.srcElement.dataset
-    let cell = x + y * 9
+    let { x, y } = e.srcElement.dataset
+    x = parseInt(x)
+    y = parseInt(y)
+    
+    let hash = x + y * 9
     // let div = e.srcElement
 
-    if (turn === 'player' && !robot.board.attackedCells.has(cell)) {
+    if (turn === 'player' && !robot.board.attackedCells.has(hash)) {
         user.attack(robot, x, y)
 
         let cell
@@ -32,5 +35,4 @@ export function attackEnemy(e) {
             turn = 'player'
         }, Math.random() * 500 + 500)
     }
-    
 }
