@@ -9,7 +9,12 @@ let robot = new Player('enemy', true)
 let turn = 'player'
 let memory = false
 let win = false
-let queue = [[[+1, 0], 1, 'x'], [[-1, 0], 1, 'x'], [[0, -1], 1, 'y'], [[0, +1], 1, 'y']]
+let queue = [
+    {x: +1, y: 0, times: 1, orientation: 'x'},
+    {x: -1, y: 0, times: 1, orientation: 'x'},
+    {x: 0, y: +1, times: 1, orientation: 'y'},
+    {x: 0, y: -1, times: 1, orientation: 'y'}
+]
 Events.on('win', () => {win = true})
 
 user.board.printBoard()
@@ -66,11 +71,11 @@ function letEnemyTargetShip() {
     let direction, x, y
     while(true) {
         direction = memory.queue.shift()
-        x = memory.x + direction[0][0] * direction[1]
-        y = memory.y + direction[0][1] * direction[1]
+        x = memory.x + direction.x * direction.times
+        y = memory.y + direction.y * direction.times
         if (user.board.isOnBoard(x, y) && !user.board.attackedCells.has(x + y * 10)) {
             if (memory.orientation) {
-                if (memory.orientation === direction[2]) break
+                if (memory.orientation === direction.orientation) break
             } else {
                 break
             }
@@ -80,8 +85,8 @@ function letEnemyTargetShip() {
     setTimeout(() => {
         let shipHit = robot.attack(user, x, y)
         if (shipHit) {
-            memory.queue.push([direction[0], direction[1] + 1, direction[2]])
-            if (!memory.orientation) memory.orientation = direction[2]
+            memory.queue.push({x: direction.x, y: direction.y, times: direction.times + 1, orientation: direction.orientation})
+            if (!memory.orientation) memory.orientation = direction.orientation
             if (win) return
             if (memory.ship.isSunk()) {
                 memory = false
