@@ -1,5 +1,9 @@
 import { attackEnemy } from './index.js'
 import { Events } from './pubsub.js'
+import hit from './hit.mp3'
+import miss from './miss.mp3'
+import sink from './sink.mp3'
+
 const $ = (id) => document.getElementById(id)
 
 export function render(board) {
@@ -51,12 +55,13 @@ function renderCells(board, hidden) {
 })();
 
 (function soundBoard() {
-    Events.on('hit', () => {playSound('hit')})
-    Events.on('miss', () => {playSound('miss')})
-    Events.on('sink', () => {playSound('sink')})
+    Events.on('hit', () => {playSound(hit)})
+    Events.on('miss', () => {playSound(miss)})
+    Events.on('sink', () => {playSound(sink)})
 })()
 
-function playSound(sound) {
-    $(sound).currentTime = 0;
-    $(sound).play();
+function playSound(file) {
+    let sound = new Audio(file)
+    // sound.currentTime = 0;
+    sound.play();
 }

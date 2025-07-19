@@ -118,6 +118,7 @@ export class Gameboard {
             if (attackedShip.isSunk()) {
                 this.#sunkShips.push(attackedShip)
                 this.clearNeighbourCells(this.getValue(x, y))
+                Events.emit('sink')
             }
         }
     }
