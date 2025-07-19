@@ -54,6 +54,7 @@ function letEnemyAttack() {
             memory = {x: x, y: y, ship: user.board.getShip(x, y), orientation: false, queue: shuffle([...queue])}
             if (memory.ship.isSunk()) {
                 memory = false
+                Events.emit('sunk')
                 letEnemyAttack()
             } else {
                 letEnemyTargetShip()
@@ -87,6 +88,7 @@ function letEnemyTargetShip() {
             if (win) return
             if (memory.ship.isSunk()) {
                 memory = false
+                Events.emit('sunk')
                 letEnemyAttack()
             } else {
                 letEnemyTargetShip()

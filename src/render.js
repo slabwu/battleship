@@ -48,4 +48,15 @@ function renderCells(board, hidden) {
         let div = document.querySelector(`.${name} [data-x="${x}"][data-y="${y}"]`)
         div.classList.add(state)
     })
+})();
+
+(function soundBoard() {
+    Events.on('hit', () => {playSound('hit')})
+    Events.on('miss', () => {playSound('miss')})
+    Events.on('sink', () => {playSound('sink')})
 })()
+
+function playSound(sound) {
+    $(sound).currentTime = 0;
+    $(sound).play();
+}

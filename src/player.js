@@ -14,9 +14,11 @@ export class Player {
         if (enemy.board.isShip(x, y)) {
             Events.emit('updateCell', [enemy.name, x, y, 'hit'])
             if (enemy.board.allShipsSunk()) Events.emit('win', this.name)
+            Events.emit('hit')
             return true
         } else {
             Events.emit('updateCell', [enemy.name, x, y, 'miss'])
+            Events.emit('miss')
             return false
         }
     }
