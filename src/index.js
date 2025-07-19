@@ -8,7 +8,9 @@ let user = new Player('player')
 let robot = new Player('enemy', true)
 let turn = 'player'
 let memory = false
+let win = false
 let queue = [[[+1, 0], 1, 'x'], [[-1, 0], 1, 'x'], [[0, -1], 1, 'y'], [[0, +1], 1, 'y']]
+Events.on('win', () => {win = true})
 
 user.board.printBoard()
 render(user.board.cells)
@@ -21,7 +23,7 @@ export function attackEnemy(e) {
     y = parseInt(y)
     let hash = x + y * 10
 
-    if (turn === 'player' && !robot.board.attackedCells.has(hash)) {
+    if (turn === 'player' && !robot.board.attackedCells.has(hash) && !win) {
         let shipHit = user.attack(robot, x, y)
         if (shipHit) return
         turn = 'enemy'
@@ -46,6 +48,7 @@ function letEnemyAttack() {
     setTimeout(() => {
         let shipHit = robot.attack(user, x, y)
         if (shipHit) {
+            if (win) return
             memory = {x: x, y: y, ship: user.board.getShip(x, y), orientation: false, queue: shuffle([...queue])}
             if (memory.ship.isSunk()) {
                 memory = false
@@ -79,6 +82,7 @@ function letEnemyTargetShip() {
         if (shipHit) {
             memory.queue.push([direction[0], direction[1] + 1, direction[2]])
             if (!memory.orientation) memory.orientation = direction[2]
+            if (win) return
             if (memory.ship.isSunk()) {
                 memory = false
                 letEnemyAttack()
