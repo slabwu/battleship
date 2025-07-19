@@ -8,7 +8,7 @@ let user = new Player('player')
 let robot = new Player('enemy', true)
 let turn = 'player'
 let memory = false
-let go = {right: [+1, 0], left: [-1, 0], up: [0, -1], down: [0, +1]}
+let queue = [[[+1, 0], 1, 'x'], [[-1, 0], 1, 'x'], [[0, -1], 1, 'y'], [[0, +1], 1, 'y']]
 
 user.board.printBoard()
 render(user.board.cells)
@@ -32,12 +32,11 @@ export function attackEnemy(e) {
 function letEnemyAttack() {
     let x
     let y
-
     if (memory) {
         letEnemyTargetShip()
         return
     }
-    console.log('aiming yolo', memory)
+
     while (true) {
             x = getRandomInt(10)
             y = getRandomInt(10)
@@ -47,9 +46,7 @@ function letEnemyAttack() {
     setTimeout(() => {
         let shipHit = robot.attack(user, x, y)
         if (shipHit) {
-            memory = {x: x, y: y, ship: user.board.getShip(x, y), queue: [
-                [go.right, 1], [go.left, 1], [go.up, 1], [go.down, 1]
-            ]}
+            memory = {x: x, y: y, ship: user.board.getShip(x, y), orientation: false, queue: shuffle([...queue])}
             if (memory.ship.isSunk()) {
                 memory = false
                 letEnemyAttack()
@@ -69,14 +66,19 @@ function letEnemyTargetShip() {
         x = memory.x + direction[0][0] * direction[1]
         y = memory.y + direction[0][1] * direction[1]
         if (user.board.isOnBoard(x, y) && !user.board.attackedCells.has(x + y * 10)) {
-            break;
+            if (memory.orientation) {
+                if (memory.orientation === direction[2]) break
+            } else {
+                break
+            }
         }
     }
 
     setTimeout(() => {
         let shipHit = robot.attack(user, x, y)
         if (shipHit) {
-            memory.queue.push([direction[0], direction[1] + 1])
+            memory.queue.push([direction[0], direction[1] + 1, direction[2]])
+            if (!memory.orientation) memory.orientation = direction[2]
             if (memory.ship.isSunk()) {
                 memory = false
                 letEnemyAttack()
@@ -90,3 +92,11 @@ function letEnemyTargetShip() {
 }
 
 let getRandomInt = (max) => Math.floor(Math.random() * max)
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = getRandomInt(i + 1);
+        [array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
+}
