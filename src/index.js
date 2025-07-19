@@ -3,7 +3,6 @@ import { Player } from './player.js'
 import { render, renderAsHidden } from './render.js'
 import { Events } from "./pubsub.js";
 
-console.log('Welcome to Battleship')
 let user = new Player('player')
 let robot = new Player('enemy', true)
 let turn = 'player'
@@ -17,10 +16,8 @@ let queue = [
 ]
 Events.on('win', () => {win = true})
 
-user.board.printBoard()
 render(user.board.cells)
 renderAsHidden(robot.board.cells)
-render(robot.board.cells)
 
 export function attackEnemy(e) {
     let { x, y } = e.srcElement.dataset
